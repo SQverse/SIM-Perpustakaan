@@ -76,13 +76,11 @@ Route::middleware(['auth', 'cekrole:admin'])->group(function () {
     Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
-    // --- TRANSAKSI PEMINJAMAN (Hanya Admin yang bisa nambah & kembaliin buku) ---
     Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
     Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'kembalikanBuku'])->name('peminjaman.kembali');
 
-    // --- CETAK LAPORAN (Sesuaikan dengan controller yang kamu buat) ---
-    // Route::get('/laporan/cetak', [PeminjamanController::class, 'cetakPDF'])->name('laporan.cetak');
+    Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'kembalikanBuku'])->name('peminjaman.kembali');
 });
 
 require __DIR__.'/auth.php';
