@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
+    
+    // Rute POST ini dipindahkan ke sini agar Anggota bisa melakukan proses peminjaman
+    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 });
 
 // =========================================================================
@@ -64,10 +67,9 @@ Route::middleware(['auth', 'cekrole:admin'])->group(function () {
     Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
+    // Rute Create (menampilkan form) tetap di Admin agar Anggota tidak bisa asal catat
     Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
-    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'kembalikanBuku'])->name('peminjaman.kembali');
-    
     Route::get('/laporan/cetak', [PeminjamanController::class, 'cetakPDF'])->name('laporan.cetak');
 });
 
