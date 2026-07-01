@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Buku;  
 use App\Models\Anggota;
 use Illuminate\Support\Facades\Auth; 
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
@@ -21,7 +22,7 @@ class PeminjamanController extends Controller
                                     ->latest()
                                     ->get();
     }
-    
+
     return view('peminjaman.index', compact('data_peminjaman'));
         // Ambil data peminjaman beserta nama anggota dan judul buku (Eager Loading)
         // latest() digunakan agar data terbaru muncul paling atas
@@ -64,6 +65,18 @@ class PeminjamanController extends Controller
         }
 
         return redirect()->route('peminjaman.index')->with('success', 'Buku berhasil dipinjam!');
+    }
+
+        public function cetakPDF()
+    {
+        // Ambil semua data peminjaman beserta relasi buku dan anggotanya
+        $peminjaman = Peminjaman::with(['buku', 'anggota'])->get();
+        
+        // Kirim data ke file tampilan khusus PDF
+        $pdf = Pdf::loadView('peminjaman.pdf', compact('peminjaman'));
+        
+        // Tampilkan hasilnya di browser (kalau mau langsung ter-download, ganti stream() jadi download())
+        return $pdf->stream('Laporan-Peminjaman-HiPerpus.pdf');
     }
 
 }
