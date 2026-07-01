@@ -5,8 +5,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AnggotaController;
 use App\Http\Controllers\KategoriController; 
 use App\Http\Controllers\BukuController;
+// Jika kamu punya controller khusus laporan, jangan lupa di-import juga. Contoh:
+// use App\Http\Controllers\LaporanController; 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // Wajib dipanggil untuk Auth::id() di Dashboard
+use Illuminate\Support\Facades\Auth; 
 use App\Models\Buku;
 use App\Models\Anggota;
 use App\Models\Peminjaman;
@@ -42,10 +44,8 @@ Route::middleware(['auth'])->group(function () {
     // Katalog Buku (Hanya lihat daftar)
     Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
     
-    // Sirkulasi / Riwayat Pinjam (Lihat daftar & Tambah pinjaman)
+    // Sirkulasi / Riwayat Pinjam (Hanya bisa LIHAT daftar riwayatnya sendiri/semua)
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
-    Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
-    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 });
 
 // =========================================================================
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 // =========================================================================
 Route::middleware(['auth', 'cekrole:admin'])->group(function () {
 
-    // --- KATEGORI (Hanya Admin yang bisa lihat dan kelola) ---
+    // --- KATEGORI ---
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
     Route::get('/kategori/tambah', [KategoriController::class, 'create'])->name('kategori.create');
     Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
@@ -69,15 +69,20 @@ Route::middleware(['auth', 'cekrole:admin'])->group(function () {
     Route::put('/anggota/{id}', [AnggotaController::class, 'update'])->name('anggota.update');
     Route::delete('/anggota/{id}', [AnggotaController::class, 'destroy'])->name('anggota.destroy');
 
-    // --- CRUD BUKU (Hanya Tambah, Edit, Hapus) ---
+    // --- CRUD BUKU ---
     Route::get('/buku/tambah', [BukuController::class, 'create'])->name('buku.create');
     Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
     Route::get('/buku/{id}/edit', [BukuController::class, 'edit'])->name('buku.edit');
     Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
-    // --- TRANSAKSI PEMINJAMAN (Hanya fitur Mengembalikan Buku) ---
+    // --- TRANSAKSI PEMINJAMAN (Hanya Admin yang bisa nambah & kembaliin buku) ---
+    Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
     Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'kembalikanBuku'])->name('peminjaman.kembali');
+
+    // --- CETAK LAPORAN (Sesuaikan dengan controller yang kamu buat) ---
+    // Route::get('/laporan/cetak', [PeminjamanController::class, 'cetakPDF'])->name('laporan.cetak');
 });
 
 require __DIR__.'/auth.php';
