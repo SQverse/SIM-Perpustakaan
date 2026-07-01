@@ -11,9 +11,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        
+        // 1. Mendaftarkan alias middleware kamu
         $middleware->alias([
             'cekrole' => \App\Http\Middleware\CekRole::class
         ]);
+
+        // 2. Memaksa Laravel memercayai HTTPS dari Railway (Trust Proxies)
+        $middleware->trustProxies(at: '*');
+        
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
