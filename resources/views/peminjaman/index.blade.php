@@ -15,6 +15,7 @@
                     <p class="text-gray-500 text-sm mt-2">Dicetak pada: {{ now()->format('d F Y (H:i)') }} | Oleh: {{ Auth::user()->name }}</p>
                 </div>
 
+                @if(Auth::user()->role == 'admin')
                 <div class="flex justify-between items-center mb-6 print:hidden">
                     <div>
                         <a href="{{ route('peminjaman.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl shadow-md transition">
@@ -27,7 +28,7 @@
                         Cetak Laporan (PDF)
                     </button>
                 </div>
-
+                @endif
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
