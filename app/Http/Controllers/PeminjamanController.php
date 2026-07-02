@@ -11,24 +11,22 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
-        public function index()
+public function index()
     {
-        // Tambahkan ini untuk melihat apa yang sedang difilter
-        // dd(Auth::id()); 
-
         if (Auth::user()->role == 'admin') {
+            // Admin melihat semua data
             $data_peminjaman = Peminjaman::with(['anggota', 'buku'])->latest()->get();
         } else {
-            // Coba ganti ke logikanya seperti ini untuk memastikannya lebih aman
-            $data_peminjaman = Peminjaman::with(['anggota', 'buku'])
-                                        ->whereHas('anggota', function($query) {
-                                            $query->where('user_id', Auth::id()); // Asumsi: tabel anggota punya kolom user_id
-                                        })
+            // Anggota difilter langsung pakai ID-nya, tanpa ngecek kolom user_id yang gaib itu
+            $data_peminjaman = Peminjaman::where('anggota_id', Auth::id())
+                                        ->with(['anggota', 'buku'])
                                         ->latest()
                                         ->get();
         }
+
         return view('peminjaman.index', compact('data_peminjaman'));
     }
+    
     public function create()
     {
         $data_anggota = Anggota::all();
