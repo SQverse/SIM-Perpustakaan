@@ -11,7 +11,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
-public function index()
+    public function index()
     {
         if (Auth::user()->role == 'admin') {
             // Admin melihat semua data
@@ -63,6 +63,31 @@ public function index()
         }
 
         return back()->with('error', 'Stok buku habis!');
+    }
+
+    // FUNGSI BARU: Untuk proses pengembalian buku oleh Admin
+    public function kembalikanBuku($id)
+    {
+        // Cari data transaksi peminjaman berdasarkan ID
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        // Pastikan statusnya memang masih 'dipinjam'
+        if ($peminjaman->status == 'dipinjam') {
+            
+            // 1. Ubah status transaksi menjadi 'dikembalikan'
+            $peminjaman->update([
+                'status' => 'dikembalikan'
+            ]);
+
+            // 2. Kembalikan / Tambah stok buku (+1)
+            $buku = Buku::findOrFail($peminjaman->buku_id);
+            $buku->increment('stok');
+
+            return redirect()->back()->with('success', 'Buku berhasil dikembalikan dan stok telah diperbarui!');
+        }
+
+        // Kalau ternyata sudah dikembalikan sebelumnya
+        return redirect()->back()->with('error', 'Buku ini sudah dikembalikan.');
     }
 
     public function cetakPDF()

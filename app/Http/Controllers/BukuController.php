@@ -61,6 +61,47 @@ class BukuController extends Controller
             'tahun_terbit' => $request->tahun_terbit,
         ]);
 
-        return redirect()->route('buku.index');
+        return redirect()->route('buku.index')->with('success', 'Buku berhasil ditambahkan!');
+    }
+
+    // FUNGSI BARU: Untuk menampilkan form edit
+    public function edit($id)
+    {
+        $buku = Buku::findOrFail($id);
+        $data_kategori = Kategori::all(); // Butuh kategori untuk dropdown
+        
+        return view('buku.edit', compact('buku', 'data_kategori'));
+    }
+
+    // FUNGSI BARU: Untuk menyimpan perubahan data buku
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'judul' => 'required|string|max:255',
+            'pengarang' => 'required|string|max:255',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'stok' => 'required|integer|min:0',
+            'tahun_terbit' => 'required|digits:4',
+        ]);
+
+        $buku = Buku::findOrFail($id);
+        $buku->update([
+            'judul' => $request->judul,
+            'pengarang' => $request->pengarang,
+            'kategori_id' => $request->kategori_id,
+            'stok' => $request->stok,
+            'tahun_terbit' => $request->tahun_terbit,
+        ]);
+
+        return redirect()->route('buku.index')->with('success', 'Buku berhasil diperbarui!');
+    }
+
+    // FUNGSI BARU: Untuk menghapus buku
+    public function destroy($id)
+    {
+        $buku = Buku::findOrFail($id);
+        $buku->delete();
+
+        return redirect()->route('buku.index')->with('success', 'Buku berhasil dihapus!');
     }
 }
