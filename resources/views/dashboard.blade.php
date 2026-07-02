@@ -42,11 +42,6 @@
                     data-pinjam="{{ $total_pinjam }}">
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8">
-                    <h3 class="text-xl font-bold text-gray-900 mb-6">Statistik Peminjaman Buku</h3>
-                    <canvas id="peminjamanChart" height="80"></canvas>
-                </div>
-
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // 2. Ambil data dari atribut HTML tadi (VS Code tidak akan error lagi)
