@@ -11,25 +11,24 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class PeminjamanController extends Controller
 {
-    public function index()
+        public function index()
     {
-        // Gunakan if-else untuk menentukan data yang diambil
+        // Tambahkan ini untuk melihat apa yang sedang difilter
+        // dd(Auth::id()); 
+
         if (Auth::user()->role == 'admin') {
-            // Jika Admin, ambil SEMUA data
             $data_peminjaman = Peminjaman::with(['anggota', 'buku'])->latest()->get();
         } else {
-            // Jika Anggota, ambil HANYA miliknya sendiri
-            // Pastikan 'anggota_id' sesuai dengan nama kolom di database kamu
-            $data_peminjaman = Peminjaman::where('anggota_id', Auth::id())
-                                        ->with(['anggota', 'buku'])
+            // Coba ganti ke logikanya seperti ini untuk memastikannya lebih aman
+            $data_peminjaman = Peminjaman::with(['anggota', 'buku'])
+                                        ->whereHas('anggota', function($query) {
+                                            $query->where('user_id', Auth::id()); // Asumsi: tabel anggota punya kolom user_id
+                                        })
                                         ->latest()
                                         ->get();
         }
-
-        // Return view dengan data yang sudah difilter
         return view('peminjaman.index', compact('data_peminjaman'));
     }
-
     public function create()
     {
         $data_anggota = Anggota::all();

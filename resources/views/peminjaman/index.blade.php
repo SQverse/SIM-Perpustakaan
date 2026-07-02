@@ -15,20 +15,23 @@
                     <p class="text-gray-500 text-sm mt-2">Dicetak pada: {{ now()->format('d F Y (H:i)') }} | Oleh: {{ Auth::user()->name }}</p>
                 </div>
 
-                @if(Auth::user()->role == 'admin')
                 <div class="flex justify-between items-center mb-6 print:hidden">
+                    
                     <div>
                         <a href="{{ route('peminjaman.create') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-xl shadow-md transition">
-                            + Catat Transaksi Baru
+                            {{ Auth::user()->role == 'admin' ? '+ Catat Transaksi Baru' : '+ Pinjam Buku Baru' }}
                         </a>
                     </div>
                     
+                    @if(Auth::user()->role == 'admin')
                     <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-xl shadow-md transition flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         Cetak Laporan (PDF)
                     </button>
+                    @endif
+
                 </div>
-                @endif
+                
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
