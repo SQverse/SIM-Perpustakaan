@@ -29,7 +29,7 @@
                             <option value="">-- Pilih Kategori --</option>
                             @foreach($data_kategori as $kategori)
                                 <option value="{{ $kategori->id }}" {{ $buku->kategori_id == $kategori->id ? 'selected' : '' }}>
-                                    {{ $kategori->nama }}
+                                    {{ $kategori->nama_kategori}}
                                 </option>
                             @endforeach
                         </select>
