@@ -38,7 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
     
-    // Rute POST ini dipindahkan ke sini agar Anggota bisa melakukan proses peminjaman
+    // Rute Create (menampilkan form) DIPINDAHKAN ke sini agar Anggota bisa buka form
+    Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    
+    // Rute POST ini agar Anggota bisa melakukan proses simpan peminjaman
     Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 });
 
@@ -67,8 +70,7 @@ Route::middleware(['auth', 'cekrole:admin'])->group(function () {
     Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
 
-    // Rute Create (menampilkan form) tetap di Admin agar Anggota tidak bisa asal catat
-    Route::get('/peminjaman/tambah', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    // Sisanya yang khusus Admin (Pengembalian buku & Cetak PDF) tetap di sini
     Route::put('/peminjaman/{id}/kembali', [PeminjamanController::class, 'kembalikanBuku'])->name('peminjaman.kembali');
     Route::get('/laporan/cetak', [PeminjamanController::class, 'cetakPDF'])->name('laporan.cetak');
 });
